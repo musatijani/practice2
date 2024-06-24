@@ -1,0 +1,861 @@
+{
+  "cells": [
+    {
+      "cell_type": "code",
+      "source": [
+        "using Pkg\n",
+        "Pkg.add(\"JLD\")\n",
+        "Pkg.add(\"SparseArrays\")"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "\u001b[32m\u001b[1m   Resolving\u001b[22m\u001b[39m package versions...\n",
+            "\u001b[32m\u001b[1m  No Changes\u001b[22m\u001b[39m to `C:\\Users\\Worlds Best\\.julia\\environments\\v1.9\\Project.toml`\n",
+            "\u001b[32m\u001b[1m  No Changes\u001b[22m\u001b[39m to `C:\\Users\\Worlds Best\\.julia\\environments\\v1.9\\Manifest.toml`\n",
+            "\u001b[32m\u001b[1m   Resolving\u001b[22m\u001b[39m package versions...\n",
+            "\u001b[32m\u001b[1m  No Changes\u001b[22m\u001b[39m to `C:\\Users\\Worlds Best\\.julia\\environments\\v1.9\\Project.toml`\n",
+            "\u001b[32m\u001b[1m  No Changes\u001b[22m\u001b[39m to `C:\\Users\\Worlds Best\\.julia\\environments\\v1.9\\Manifest.toml`\n"
+          ]
+        }
+      ],
+      "execution_count": 1,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-04T19:01:54.253Z",
+          "iopub.execute_input": "2023-12-04T19:01:55.408Z",
+          "iopub.status.idle": "2023-12-04T19:02:49.954Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        " using JLD\n",
+        "\n",
+        "M=rand(20,20)\n",
+        "\n",
+        "save(\"M.jld\", \"A\", M) #(filename, variable name, value)\n",
+        "\n",
+        "#M=ones(20,20)\n",
+        "\n",
+        "#dict=load(\"M.jld\")\n",
+        "#M=dict[\"M\"]"
+      ],
+      "outputs": [],
+      "execution_count": 2,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-04T19:02:50.014Z",
+          "iopub.execute_input": "2023-12-04T19:02:50.038Z",
+          "iopub.status.idle": "2023-12-04T19:03:01.760Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "M=ones(20,20)\n",
+        "dict=load(\"M.jld\")\n",
+        "M=dict[\"A\"]"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 3,
+          "data": {
+            "text/plain": "20×20 Matrix{Float64}:\n 0.856235    0.105857   0.329781   …  0.259085    0.194249    0.914388\n 0.138973    0.351588   0.379115      0.382831    0.325081    0.807374\n 0.232797    0.881777   0.208149      0.891795    0.162541    0.329264\n 0.333986    0.195969   0.873801      0.623787    0.906519    0.544592\n 0.427354    0.563563   0.662965      0.559984    0.266838    0.863611\n 0.283103    0.133467   0.408972   …  0.115028    0.718898    0.580617\n 0.0928744   0.0375188  0.221206      0.397912    0.841049    0.565344\n 0.121144    0.839358   0.742574      0.103783    0.260875    0.4824\n 0.399451    0.0516293  0.358773      0.449572    0.545968    0.594606\n 0.287327    0.429506   0.540354      0.252817    0.00906344  0.500821\n 0.384641    0.474777   0.491824   …  0.311487    0.935743    0.947363\n 0.809094    0.493166   0.0846055     0.00314096  0.451233    0.264474\n 0.331225    0.170978   0.895244      0.439912    0.457875    0.148037\n 0.0602998   0.0124776  0.348205      0.156821    0.340648    0.282353\n 0.405609    0.505176   0.791083      0.480882    0.137617    0.268387\n 0.239446    0.565431   0.722043   …  0.667727    0.37026     0.627605\n 0.140628    0.489953   0.790328      0.819083    0.986832    0.619014\n 0.0208477   0.751628   0.632699      0.88077     0.795652    0.427574\n 0.00196627  0.216429   0.718066      0.155369    0.570268    0.435406\n 0.527605    0.417699   0.889714      0.655972    0.327834    0.4867"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 3,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-04T19:03:01.789Z",
+          "iopub.execute_input": "2023-12-04T19:03:01.813Z",
+          "iopub.status.idle": "2023-12-04T19:03:08.646Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "using SparseArrays\n",
+        "using JLD\n",
+        "data=load(\"stanford.jld\")\n",
+        "a=data[\"a\"]\n",
+        "H=data[\"S\"]\n",
+        "typeof(H)"
+      ],
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "LoadError",
+          "evalue": "ArgumentError: No file exists at given path: stanford.jld",
+          "traceback": [
+            "ArgumentError: No file exists at given path: stanford.jld",
+            "",
+            "Stacktrace:",
+            " [1] checkpath_load",
+            "   @ C:\\Users\\Worlds Best\\.julia\\packages\\FileIO\\BE7iZ\\src\\loadsave.jl:167 [inlined]",
+            " [2] load(::String; options::Base.Pairs{Symbol, Union{}, Tuple{}, NamedTuple{(), Tuple{}}})",
+            "   @ FileIO C:\\Users\\Worlds Best\\.julia\\packages\\FileIO\\BE7iZ\\src\\loadsave.jl:110",
+            " [3] load(::String)",
+            "   @ FileIO C:\\Users\\Worlds Best\\.julia\\packages\\FileIO\\BE7iZ\\src\\loadsave.jl:109",
+            " [4] top-level scope",
+            "   @ In[8]:3"
+          ]
+        }
+      ],
+      "execution_count": 8,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-06T00:11:30.758Z",
+          "iopub.execute_input": "2023-12-06T00:11:30.778Z",
+          "iopub.status.idle": "2023-09-26T17:57:27.492Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "\n",
+        "using SparseArrays\n",
+        "using LinearAlgebra\n",
+        "\n",
+        "n=size(S)[1]\n",
+        "e=ones(n,1)\n",
+        "u=1/n*ones(n,1)\n",
+        "\n",
+        "#B=S+a*u' #This does not work! Use the method for sparse matrices instead.\n",
+        "\n",
+        "alpha=0.9\n",
+        "w=alpha*a+(1-alpha)*e\n",
+        "v=u'\n",
+        "v=alpha*v*H+(v*w*u')\n",
+        "#now need to check if this converges\n",
+        "\n",
+        "\n",
+        "\n"
+      ],
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "LoadError",
+          "evalue": "UndefVarError: `S` not defined",
+          "traceback": [
+            "UndefVarError: `S` not defined",
+            "",
+            "Stacktrace:",
+            " [1] top-level scope",
+            "   @ In[10]:5"
+          ]
+        }
+      ],
+      "execution_count": 10,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-06T00:11:41.465Z",
+          "iopub.execute_input": "2023-12-06T00:11:41.481Z",
+          "iopub.status.idle": "2023-09-26T18:06:07.061Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "using LinearAlgebra\n",
+        "\n",
+        "A = [9.0 -7.0 -6.0 -13.0 -5.0; -7.0 5.0 -14.0 -8.0 -9.0; 6.0 -14.0 5.0 -5.0 -1.0; -13.0 -8.0 -5.0 -13.0 5.0; -5.0 -9.0 -1.0 5.0 13.0]\n",
+        "\n"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 12,
+          "data": {
+            "text/plain": "5×5 Matrix{Float64}:\n   9.0   -7.0   -6.0  -13.0  -5.0\n  -7.0    5.0  -14.0   -8.0  -9.0\n   6.0  -14.0    5.0   -5.0  -1.0\n -13.0   -8.0   -5.0  -13.0   5.0\n  -5.0   -9.0   -1.0    5.0  13.0"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 12,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-06T19:39:08.264Z",
+          "iopub.execute_input": "2023-12-06T19:39:08.293Z",
+          "iopub.status.idle": "2023-12-06T19:39:08.341Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "for k = 1:100\n",
+        "  Q,R = qr(A)\n",
+        "  A = R*Q\n",
+        "end  "
+      ],
+      "outputs": [],
+      "execution_count": 30,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-06T19:40:10.140Z",
+          "iopub.execute_input": "2023-12-06T19:40:10.160Z",
+          "iopub.status.idle": "2023-12-06T19:40:10.208Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "A"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 31,
+          "data": {
+            "text/plain": "5×5 Matrix{Float64}:\n -25.6995         1.41053       -2.65149  3.79346       -3.18797\n  -1.05012e-91   22.8195        -3.66326  1.0921        -2.32325\n   8.14239e-193   4.18165e-101  20.059    7.799         -3.91221\n   0.0            0.0            0.0      7.30519       -3.77983\n   0.0            0.0            0.0      1.49762e-223  -5.48413"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 31,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-06T19:40:19.288Z",
+          "iopub.execute_input": "2023-12-06T19:40:19.311Z",
+          "iopub.status.idle": "2023-12-06T19:40:19.375Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "using SparseArrays\n",
+        "using JLD\n",
+        "data=load(\"shake.jld\")"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 1,
+          "data": {
+            "text/plain": "Dict{String, Any} with 3 entries:\n  \"tdm\"        => [0.0 0.0 … 0.0 25.0; 0.0 0.0 … 0.0 1.0; … ; 0.0 0.0 … 0.0 1.0…\n  \"dictionary\" => Any[\"aaron\"; \"aarons\"; … ; \"zounds\"; \"zwaggered\";;]\n  \"plays\"      => Any[\"Cymbeline\"; \"Love's Labours Lost\"; … ; \"Timon of Athens\"…"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 1,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T18:40:05.756Z",
+          "iopub.execute_input": "2023-12-07T18:40:07.594Z",
+          "iopub.status.idle": "2023-12-07T18:40:41.386Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "A =data[\"tdm\"]\n",
+        "dictionary = data[\"dictionary\"]\n",
+        "plays=data[\"plays\"]"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 16,
+          "data": {
+            "text/plain": "33×1 Matrix{Any}:\n \"Cymbeline\"\n \"Love's Labours Lost\"\n \"Measure for Measure\"\n \"The Merchant of Venice\"\n \"A Midsummer Night's Dream\"\n \"Much Ado About Nothing\"\n \"Pericles, Prince of Tyre\"\n \"Taming of the Shrew\"\n \"The Tempest\"\n \"Troilus and Cressida\"\n \"Twelfth Night\"\n \"Two Gentlemen of Verona\"\n \"Winter's Tale\"\n ⋮\n \"Richard II\"\n \"Richard III\"\n \"Antony and Cleopatra\"\n \"Coriolanus\"\n \"Hamlet\"\n \"Julius Caesar\"\n \"King Lear\"\n \"Macbeth\"\n \"Othello\"\n \"Romeo and Juliet\"\n \"Timon of Athens\"\n \"Titus Andronicus\""
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 16,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:08:28.653Z",
+          "iopub.execute_input": "2023-12-07T19:08:28.685Z",
+          "iopub.status.idle": "2023-12-07T19:08:28.746Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "\n",
+        "n=length(dictionary)\n",
+        "q=zeros(n,1)\n",
+        "i=findall(x->x==\"wherefore\",dictionary)[1]\n",
+        "q[i]=1\n",
+        "i=findall(x->x==\"art\",dictionary)[1]\n",
+        "q[i]=1\n",
+        "i=findall(x->x==\"thou\",dictionary)[1]\n",
+        "q[i]=1"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 12,
+          "data": {
+            "text/plain": "1"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 12,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:06:51.422Z",
+          "iopub.execute_input": "2023-12-07T19:06:51.454Z",
+          "iopub.status.idle": "2023-12-07T19:06:53.132Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "using LinearAlgebra\n",
+        "for k=1:33\n",
+        "  A[:,k]=A[:,k]/norm(A[:,k])\n",
+        "end\n",
+        "A"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 17,
+          "data": {
+            "text/plain": "26126×33 Matrix{Float64}:\n 0.0        0.0         0.0         …  0.0         0.0         0.486927\n 0.0        0.0         0.0            0.0         0.0         0.486927\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.0        0.0         0.0            0.0         0.425007    0.0\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.0        0.0         0.0         …  0.0         0.0         0.486927\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.129956   0.0930326   0.0            0.119832    0.0         0.0831911\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.454452   0.0         0.0         …  0.0         0.0         0.0\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.0        0.0         0.0            0.0         0.0         0.0\n ⋮                                  ⋱  ⋮                       \n 0.0        0.00108734  0.0            0.0         0.0         0.0\n 0.0        0.0         0.0         …  0.0         0.00121723  0.0\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.0        0.00108734  0.0            0.0         0.0         0.0\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.0015189  0.0         0.0            0.0         0.0         0.0\n 0.0        0.0         0.0         …  0.0         0.0         0.0\n 0.0        0.0         0.0            0.0         0.0         0.000972315\n 0.0        0.0         0.00142788     0.0         0.0         0.0\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.0        0.0         0.0            0.00280113  0.0         0.000972315\n 0.0        0.0         0.0         …  0.0         0.0         0.0"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 17,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:08:33.535Z",
+          "iopub.execute_input": "2023-12-07T19:08:33.566Z",
+          "iopub.status.idle": "2023-12-07T19:08:33.632Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        " \n",
+        "q=q/norm(q)\n",
+        "W=A'*q"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 18,
+          "data": {
+            "text/plain": "33×1 Matrix{Float64}:\n 0.17714080210885252\n 0.06968308999368077\n 0.11788770810391785\n 0.14904654789811478\n 0.20861532754294088\n 0.11815730659861477\n 0.17669821729673735\n 0.13713495127850678\n 0.2214267171474155\n 0.12343324600712575\n 0.12133215127191187\n 0.15015273411309465\n 0.17667811877107206\n ⋮\n 0.1260016366708249\n 0.17294441847393574\n 0.1705152513850788\n 0.08237486824290037\n 0.08266782893280113\n 0.16882678763648531\n 0.20466169133966094\n 0.1612797121053623\n 0.13292504555442816\n 0.27088659069057647\n 0.1644483097184518\n 0.11283462922115836"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 18,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:08:39.862Z",
+          "iopub.execute_input": "2023-12-07T19:08:39.884Z",
+          "iopub.status.idle": "2023-12-07T19:08:40.118Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "i=findall(x->x>0.16,W)\n",
+        "plays[i]\n"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 23,
+          "data": {
+            "text/plain": "17-element Vector{Any}:\n \"Cymbeline\"\n \"A Midsummer Night's Dream\"\n \"Pericles, Prince of Tyre\"\n \"The Tempest\"\n \"Winter's Tale\"\n \"Henry IV, part 1\"\n \"Henry IV, part 2\"\n \"Henry VI, part 1\"\n \"Henry VI, part 2\"\n \"Henry VI, part 3\"\n \"Richard III\"\n \"Antony and Cleopatra\"\n \"Julius Caesar\"\n \"King Lear\"\n \"Macbeth\"\n \"Romeo and Juliet\"\n \"Timon of Athens\""
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 23,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:16:51.532Z",
+          "iopub.execute_input": "2023-12-07T19:16:51.567Z",
+          "iopub.status.idle": "2023-12-07T19:16:53.576Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "n=length(dictionary)\n",
+        "q=zeros(n,1)\n",
+        "i=findall(x->x==\"lady\",dictionary)[1]\n",
+        "q[i]=1\n",
+        "i=findall(x->x==\"doth\",dictionary)[1]\n",
+        "q[i]=1\n",
+        "i=findall(x->x==\"protest\",dictionary)[1]\n",
+        "q[i]=1\n",
+        "i=findall(x->x==\"much\",dictionary)[1]\n",
+        "q[i]=1\n",
+        "sum(q)"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 26,
+          "data": {
+            "text/plain": "4.0"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 26,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:24:19.125Z",
+          "iopub.execute_input": "2023-12-07T19:24:19.163Z",
+          "iopub.status.idle": "2023-12-07T19:24:20.065Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "using LinearAlgebra\n",
+        "for k=1:33\n",
+        "  A[:,k]=A[:,k]/norm(A[:,k])\n",
+        "end\n",
+        "A"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 27,
+          "data": {
+            "text/plain": "26126×33 Matrix{Float64}:\n 0.0        0.0         0.0         …  0.0         0.0         0.486927\n 0.0        0.0         0.0            0.0         0.0         0.486927\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.0        0.0         0.0            0.0         0.425007    0.0\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.0        0.0         0.0         …  0.0         0.0         0.486927\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.129956   0.0930326   0.0            0.119832    0.0         0.0831911\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.454452   0.0         0.0         …  0.0         0.0         0.0\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.0        0.0         0.0            0.0         0.0         0.0\n ⋮                                  ⋱  ⋮                       \n 0.0        0.00108734  0.0            0.0         0.0         0.0\n 0.0        0.0         0.0         …  0.0         0.00121723  0.0\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.0        0.00108734  0.0            0.0         0.0         0.0\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.0015189  0.0         0.0            0.0         0.0         0.0\n 0.0        0.0         0.0         …  0.0         0.0         0.0\n 0.0        0.0         0.0            0.0         0.0         0.000972315\n 0.0        0.0         0.00142788     0.0         0.0         0.0\n 0.0        0.0         0.0            0.0         0.0         0.0\n 0.0        0.0         0.0            0.00280113  0.0         0.000972315\n 0.0        0.0         0.0         …  0.0         0.0         0.0"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 27,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:25:01.967Z",
+          "iopub.execute_input": "2023-12-07T19:25:02.018Z",
+          "iopub.status.idle": "2023-12-07T19:25:02.098Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "q=q/norm(q)\n",
+        "W=A'*q"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 28,
+          "data": {
+            "text/plain": "33×1 Matrix{Float64}:\n 0.06303415880129026\n 0.06578402219815947\n 0.037838942312109325\n 0.1302103608333877\n 0.06989275316323283\n 0.1286688921084925\n 0.06653267173147714\n 0.036888306164477476\n 0.031960193687709054\n 0.06057458513778839\n 0.08194662853373612\n 0.061053526393911685\n 0.06919458267229342\n ⋮\n 0.029134145656040222\n 0.049924753280384884\n 0.037845213623318816\n 0.02127646289543382\n 0.05296676450217585\n 0.06352497983964527\n 0.045633259133704675\n 0.030199422226656086\n 0.051699011788625196\n 0.09103673725593293\n 0.027996389042637362\n 0.02333555948229767"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 28,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:25:07.816Z",
+          "iopub.execute_input": "2023-12-07T19:25:07.850Z",
+          "iopub.status.idle": "2023-12-07T19:25:07.927Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "i=findall(x->x>0.09,W)\n",
+        "plays[i]"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 32,
+          "data": {
+            "text/plain": "3-element Vector{Any}:\n \"The Merchant of Venice\"\n \"Much Ado About Nothing\"\n \"Romeo and Juliet\""
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 32,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:30:17.273Z",
+          "iopub.execute_input": "2023-12-07T19:30:17.310Z",
+          "iopub.status.idle": "2023-12-07T19:30:17.688Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "U,S,V=svd(A)\n",
+        "sigma=diagm(S)\n",
+        "\n",
+        "A10=U[:,1:10]*sigma[1:10,1:10]*V[:,1:10]'"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 33,
+          "data": {
+            "text/plain": "26126×33 Matrix{Float64}:\n  0.0611959     0.0196442    -0.0762926    …   0.013116      0.274784\n  0.0611959     0.0196442    -0.0762926        0.013116      0.274784\n  0.000788277  -0.00883544   -0.0363342       -0.0695377     0.148502\n  0.0809316    -0.0023173     0.146021         0.369248     -0.00492113\n  0.0337794    -0.0325693     0.0111173       -0.0524852     0.0102338\n  0.0611959     0.0196442    -0.0762926    …   0.013116      0.274784\n -0.0520897    -0.0409588    -0.0434228        0.0510128    -0.0480835\n -0.0203016    -0.0219972     0.0551624        0.0107958     0.011045\n  0.037293      0.100421     -0.0307115       -0.0594688     0.21256\n  0.11804       0.0122922     0.0493432       -0.0398381    -0.0225997\n  0.192321     -0.0110045    -0.0175926    …   0.0445785     0.0565639\n  0.00135324   -0.0361062     0.0331983        0.0526901     0.0138525\n  0.066438      0.0312749     0.0125426        0.11146       0.0742969\n  ⋮                                        ⋱                \n -7.26182e-5    0.000993613   0.000147692     -8.64144e-5    7.69347e-5\n  0.000140006  -4.90528e-6    0.000192685  …   0.000631653   3.27878e-5\n  0.000190936   2.08866e-5    1.92751e-6       4.53571e-5    2.66021e-5\n -5.89761e-6    0.00103949    3.51254e-5      -4.38182e-6    4.38669e-5\n  0.000178206   8.38882e-5    3.36428e-5       0.000298968   0.000199285\n  0.00025554   -8.23832e-6    1.14017e-5       0.000174703   0.000190892\n  0.000381872   4.17732e-5    3.85502e-6   …   9.07142e-5    5.32041e-5\n  0.000122198   3.92264e-5   -0.000152344      2.61905e-5    0.000548699\n  1.07185e-5    4.61264e-5    0.000269499      0.000226031  -0.000223724\n  2.26921e-6   -6.05454e-5    5.56693e-5       8.83546e-5    2.32288e-5\n  0.000486809  -7.27674e-5    0.000653697      0.00162668    0.000497988\n  0.000190936   2.08866e-5    1.92751e-6   …   4.53571e-5    2.66021e-5"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 33,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:31:18.545Z",
+          "iopub.execute_input": "2023-12-07T19:31:18.580Z",
+          "iopub.status.idle": "2023-12-07T19:31:19.690Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "n=length(dictionary)\n",
+        "q=zeros(n,1)\n",
+        "i=findall(x->x==\"wherefore\",dictionary)[1]\n",
+        "q[i]=1\n",
+        "i=findall(x->x==\"art\",dictionary)[1]\n",
+        "q[i]=1\n",
+        "i=findall(x->x==\"thou\",dictionary)[1]\n",
+        "q[i]=1\n",
+        "\n",
+        "A10=U[:,1:10]*sigma[1:10,1:10]*V[:,1:10]'\n",
+        "\n",
+        "q=q/norm(q)\n",
+        "W=A10'*q\n",
+        "\n",
+        "i=findall(x->x>0.16,W)\n",
+        "plays[i]"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 38,
+          "data": {
+            "text/plain": "15-element Vector{Any}:\n \"Cymbeline\"\n \"The Merchant of Venice\"\n \"A Midsummer Night's Dream\"\n \"Pericles, Prince of Tyre\"\n \"The Tempest\"\n \"Winter's Tale\"\n \"Henry IV, part 1\"\n \"Henry IV, part 2\"\n \"Henry VI, part 1\"\n \"Henry VI, part 2\"\n \"Henry VI, part 3\"\n \"Richard III\"\n \"King Lear\"\n \"Macbeth\"\n \"Romeo and Juliet\""
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 38,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:47:18.530Z",
+          "iopub.execute_input": "2023-12-07T19:47:18.582Z",
+          "iopub.status.idle": "2023-12-07T19:47:19.578Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "n=length(dictionary)\n",
+        "q=zeros(n,1)\n",
+        "i=findall(x->x==\"lady\",dictionary)[1]\n",
+        "q[i]=1\n",
+        "i=findall(x->x==\"doth\",dictionary)[1]\n",
+        "q[i]=1\n",
+        "i=findall(x->x==\"protest\",dictionary)[1]\n",
+        "q[i]=1\n",
+        "i=findall(x->x==\"much\",dictionary)[1]\n",
+        "q[i]=1\n",
+        "\n",
+        "A10=U[:,1:10]*sigma[1:10,1:10]*V[:,1:10]'\n",
+        "\n",
+        "q=q/norm(q)\n",
+        "W=A10'*q\n",
+        "\n",
+        "i=findall(x->x>0.09,W)\n",
+        "plays[i]"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 39,
+          "data": {
+            "text/plain": "Any[]"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 39,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:48:17.193Z",
+          "iopub.execute_input": "2023-12-07T19:48:17.241Z",
+          "iopub.status.idle": "2023-12-07T19:48:18.581Z"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "kernel_info": {
+      "name": "julia-1.5"
+    },
+    "language_info": {
+      "file_extension": ".jl",
+      "name": "julia",
+      "mimetype": "application/julia",
+      "version": "1.9.3"
+    },
+    "kernelspec": {
+      "argv": [
+        "/Applications/Julia-1.5.app/Contents/Resources/julia/bin/julia",
+        "-i",
+        "--startup-file=yes",
+        "--color=yes",
+        "--project=@.",
+        "/Users/profwright/.julia/packages/IJulia/tOM8L/src/kernel.jl",
+        "{connection_file}"
+      ],
+      "display_name": "Julia 1.5.0",
+      "env": {},
+      "interrupt_mode": "signal",
+      "language": "julia",
+      "name": "julia-1.5"
+    },
+    "nteract": {
+      "version": "0.28.0"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}

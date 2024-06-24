@@ -1,0 +1,468 @@
+{
+  "cells": [
+    {
+      "cell_type": "code",
+      "source": [
+        "###NUMBER 1###\n",
+        "A = [0 1 1 0 0; 0 0 0 1 0; 1 1 0 1 0; 1 0 1 0 1; 1 0 0 0 0]\n",
+        "H = [0 1/2 1/2 0 0; 0 0 0 1 0; 1/3 1/3 0 1/3 0; 1/3 0 1/3 0 1/3; 1 0 0 0 0 ]\n",
+        "v = [1 0 0 0 0]'\n",
+        "for k = 1:1000\n",
+        "  v = H'* v\n",
+        "end\n",
+        "v"
+      ],
+      "outputs": [],
+      "execution_count": null,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-06T07:03:45.127Z",
+          "iopub.execute_input": "2023-12-06T07:03:45.691Z",
+          "iopub.status.idle": "2023-12-06T07:03:48.399Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "###NUMBER 2 ###\n",
+        "using Pkg\n",
+        "Pkg.add(\"JLD\")\n",
+        "Pkg.add(\"SparseArrays\")"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "\u001b[32m\u001b[1m   Resolving\u001b[22m\u001b[39m package versions...\n",
+            "\u001b[32m\u001b[1m  No Changes\u001b[22m\u001b[39m to `C:\\Users\\olatd\\.julia\\environments\\v1.9\\Project.toml`\n",
+            "\u001b[32m\u001b[1m  No Changes\u001b[22m\u001b[39m to `C:\\Users\\olatd\\.julia\\environments\\v1.9\\Manifest.toml`\n",
+            "\u001b[32m\u001b[1m   Resolving\u001b[22m\u001b[39m package versions...\n",
+            "\u001b[32m\u001b[1m  No Changes\u001b[22m\u001b[39m to `C:\\Users\\olatd\\.julia\\environments\\v1.9\\Project.toml`\n",
+            "\u001b[32m\u001b[1m  No Changes\u001b[22m\u001b[39m to `C:\\Users\\olatd\\.julia\\environments\\v1.9\\Manifest.toml`\n"
+          ]
+        }
+      ],
+      "execution_count": 2,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-06T07:03:50.358Z",
+          "iopub.execute_input": "2023-12-06T07:03:50.362Z",
+          "iopub.status.idle": "2023-12-06T07:04:20.770Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "\n",
+        "using SparseArrays\n",
+        "using JLD\n",
+        "data = load(\"stanford.jld\")\n",
+        "a = data[\"a\"]\n",
+        "H = data[\"S\"]\n",
+        "typeof(H)\n"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 2,
+          "data": {
+            "text/plain": "SparseMatrixCSC{Float64, Int64}"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 2,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-06T15:25:17.928Z",
+          "iopub.execute_input": "2023-12-06T15:25:17.935Z",
+          "iopub.status.idle": "2023-12-06T15:25:25.991Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "n=length(a)\n",
+        "u=1/n*ones(n,1)\n",
+        "e=ones(n,1)\n",
+        "v = u\n",
+        "v = v'\n",
+        "alpha = 0.8\n",
+        "w = alpha * a + (1-alpha)* e\n",
+        "for k = 1:1000\n",
+        "  v = alpha * v * H + (v*w)*u'\n",
+        "end\n",
+        "\n",
+        "\n"
+      ],
+      "outputs": [],
+      "execution_count": 4,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-06T15:25:45.696Z",
+          "iopub.execute_input": "2023-12-06T15:25:45.702Z",
+          "iopub.status.idle": "2023-12-06T15:26:03.687Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "v"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 5,
+          "data": {
+            "text/plain": "1×281903 Matrix{Float64}:\n 7.10713e-7  0.000109033  1.02103e-6  …  7.15298e-7  1.95748e-6  1.72668e-6"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 5,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-06T15:26:18.328Z",
+          "iopub.execute_input": "2023-12-06T15:26:18.335Z",
+          "iopub.status.idle": "2023-12-06T15:26:19.951Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "sortperm(v'[:,1], rev=true)"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 7,
+          "data": {
+            "text/plain": "281903-element Vector{Int64}:\n  89073\n 226411\n 241454\n 134832\n  69358\n  67756\n 234704\n 225872\n 186750\n 262860\n 105607\n 136821\n  68889\n      ⋮\n 281627\n 281646\n 281647\n 281700\n 281715\n 281728\n 281778\n 281785\n 281813\n 281849\n 281865\n 281888"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 7,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-06T15:29:39.734Z",
+          "iopub.execute_input": "2023-12-06T15:29:39.737Z",
+          "iopub.status.idle": "2023-12-06T15:29:39.756Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "####NUMBER 5####\n",
+        "A = zeros(40,52)\n",
+        "p = 1/36 *[1 2 3 4 5 6 5 4 3 2 1]\n",
+        "for k = 1:40\n",
+        "  A[k,k+2:k+12] = p\n",
+        "end\n",
+        "A"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 12,
+          "data": {
+            "text/plain": "40×52 Matrix{Float64}:\n 0.0  0.0  0.0277778  0.0555556  …  0.0        0.0        0.0\n 0.0  0.0  0.0        0.0277778     0.0        0.0        0.0\n 0.0  0.0  0.0        0.0           0.0        0.0        0.0\n 0.0  0.0  0.0        0.0           0.0        0.0        0.0\n 0.0  0.0  0.0        0.0           0.0        0.0        0.0\n 0.0  0.0  0.0        0.0        …  0.0        0.0        0.0\n 0.0  0.0  0.0        0.0           0.0        0.0        0.0\n 0.0  0.0  0.0        0.0           0.0        0.0        0.0\n 0.0  0.0  0.0        0.0           0.0        0.0        0.0\n 0.0  0.0  0.0        0.0           0.0        0.0        0.0\n 0.0  0.0  0.0        0.0        …  0.0        0.0        0.0\n 0.0  0.0  0.0        0.0           0.0        0.0        0.0\n 0.0  0.0  0.0        0.0           0.0        0.0        0.0\n ⋮                               ⋱             ⋮          \n 0.0  0.0  0.0        0.0           0.0        0.0        0.0\n 0.0  0.0  0.0        0.0           0.0        0.0        0.0\n 0.0  0.0  0.0        0.0        …  0.0        0.0        0.0\n 0.0  0.0  0.0        0.0           0.0        0.0        0.0\n 0.0  0.0  0.0        0.0           0.0        0.0        0.0\n 0.0  0.0  0.0        0.0           0.0        0.0        0.0\n 0.0  0.0  0.0        0.0           0.0        0.0        0.0\n 0.0  0.0  0.0        0.0        …  0.0        0.0        0.0\n 0.0  0.0  0.0        0.0           0.0        0.0        0.0\n 0.0  0.0  0.0        0.0           0.0277778  0.0        0.0\n 0.0  0.0  0.0        0.0           0.0555556  0.0277778  0.0\n 0.0  0.0  0.0        0.0           0.0833333  0.0555556  0.0277778"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 12,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:11:48.254Z",
+          "iopub.execute_input": "2023-12-07T19:11:48.261Z",
+          "iopub.status.idle": "2023-12-07T19:11:48.386Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "A[29:40,1:12] = A[29:40,41:52]"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 13,
+          "data": {
+            "text/plain": "12×12 Matrix{Float64}:\n 0.0277778  0.0        0.0        …  0.0        0.0        0.0\n 0.0555556  0.0277778  0.0           0.0        0.0        0.0\n 0.0833333  0.0555556  0.0277778     0.0        0.0        0.0\n 0.111111   0.0833333  0.0555556     0.0        0.0        0.0\n 0.138889   0.111111   0.0833333     0.0        0.0        0.0\n 0.166667   0.138889   0.111111   …  0.0        0.0        0.0\n 0.138889   0.166667   0.138889      0.0        0.0        0.0\n 0.111111   0.138889   0.166667      0.0        0.0        0.0\n 0.0833333  0.111111   0.138889      0.0        0.0        0.0\n 0.0555556  0.0833333  0.111111      0.0277778  0.0        0.0\n 0.0277778  0.0555556  0.0833333  …  0.0555556  0.0277778  0.0\n 0.0        0.0277778  0.0555556     0.0833333  0.0555556  0.0277778"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 13,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:14:41.751Z",
+          "iopub.execute_input": "2023-12-07T19:14:41.761Z",
+          "iopub.status.idle": "2023-12-07T19:14:41.826Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "B = A[:,1:40]"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 14,
+          "data": {
+            "text/plain": "40×40 Matrix{Float64}:\n 0.0        0.0        0.0277778  …  0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0        …  0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0        …  0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n ⋮                                ⋱                        \n 0.0277778  0.0        0.0           0.111111   0.0833333  0.0555556\n 0.0555556  0.0277778  0.0           0.138889   0.111111   0.0833333\n 0.0833333  0.0555556  0.0277778  …  0.166667   0.138889   0.111111\n 0.111111   0.0833333  0.0555556     0.138889   0.166667   0.138889\n 0.138889   0.111111   0.0833333     0.111111   0.138889   0.166667\n 0.166667   0.138889   0.111111      0.0833333  0.111111   0.138889\n 0.138889   0.166667   0.138889      0.0555556  0.0833333  0.111111\n 0.111111   0.138889   0.166667   …  0.0277778  0.0555556  0.0833333\n 0.0833333  0.111111   0.138889      0.0        0.0277778  0.0555556\n 0.0555556  0.0833333  0.111111      0.0        0.0        0.0277778\n 0.0277778  0.0555556  0.0833333     0.0        0.0        0.0\n 0.0        0.0277778  0.0555556     0.0        0.0        0.0"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 14,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:16:09.485Z",
+          "iopub.execute_input": "2023-12-07T19:16:09.493Z",
+          "iopub.status.idle": "2023-12-07T19:16:09.548Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "B[31,:] = zeros(1,40)\n",
+        "B[31,11] = 1\n",
+        "B"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 16,
+          "data": {
+            "text/plain": "40×40 Matrix{Float64}:\n 0.0        0.0        0.0277778  …  0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0        …  0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0        …  0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n 0.0        0.0        0.0           0.0        0.0        0.0\n ⋮                                ⋱                        \n 0.0277778  0.0        0.0           0.111111   0.0833333  0.0555556\n 0.0555556  0.0277778  0.0           0.138889   0.111111   0.0833333\n 0.0        0.0        0.0        …  0.0        0.0        0.0\n 0.111111   0.0833333  0.0555556     0.138889   0.166667   0.138889\n 0.138889   0.111111   0.0833333     0.111111   0.138889   0.166667\n 0.166667   0.138889   0.111111      0.0833333  0.111111   0.138889\n 0.138889   0.166667   0.138889      0.0555556  0.0833333  0.111111\n 0.111111   0.138889   0.166667   …  0.0277778  0.0555556  0.0833333\n 0.0833333  0.111111   0.138889      0.0        0.0277778  0.0555556\n 0.0555556  0.0833333  0.111111      0.0        0.0        0.0277778\n 0.0277778  0.0555556  0.0833333     0.0        0.0        0.0\n 0.0        0.0277778  0.0555556     0.0        0.0        0.0"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 16,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:21:15.730Z",
+          "iopub.execute_input": "2023-12-07T19:21:15.747Z",
+          "iopub.status.idle": "2023-12-07T19:21:15.768Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "v = 1/40 * ones(40,1)\n",
+        "for k = 1:1000\n",
+        "  v = B'* v\n",
+        "end\n",
+        "v"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 17,
+          "data": {
+            "text/plain": "40×1 Matrix{Float64}:\n 0.022339500068273448\n 0.022513293931936428\n 0.02270322739484048\n 0.02295522773846554\n 0.022593416534311885\n 0.022403849816933056\n 0.02233443636365308\n 0.02234503361504409\n 0.022402284163673198\n 0.02247526372094654\n 0.04869197461500908\n 0.022532715961627973\n 0.02323857037416809\n ⋮\n 0.02628969045133588\n 0.026216710894062537\n 0.02616050769980504\n 0.026159258653381104\n 0.02545340424084099\n 0.024751371103196737\n 0.024024082473465387\n 0.023247798560021248\n 0.022400221557437167\n 0.021456842433976414\n 0.02186065163379717\n 0.022137417775987097"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 17,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:24:03.882Z",
+          "iopub.execute_input": "2023-12-07T19:24:03.892Z",
+          "iopub.status.idle": "2023-12-07T19:24:04.772Z"
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "sortperm(v[:,1], rev=true)"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 18,
+          "data": {
+            "text/plain": "40-element Vector{Int64}:\n 11\n 18\n 19\n 20\n 27\n 21\n 28\n 17\n 29\n 26\n 30\n 22\n 31\n  ⋮\n 12\n  2\n 10\n  6\n  9\n 37\n  8\n  1\n  7\n 40\n 39\n 38"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 18,
+      "metadata": {
+        "collapsed": true,
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "execution": {
+          "iopub.status.busy": "2023-12-07T19:25:14.972Z",
+          "iopub.execute_input": "2023-12-07T19:25:14.979Z",
+          "iopub.status.idle": "2023-12-07T19:25:15.467Z"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "kernel_info": {
+      "name": "julia-1.9"
+    },
+    "language_info": {
+      "file_extension": ".jl",
+      "name": "julia",
+      "mimetype": "application/julia",
+      "version": "1.9.4"
+    },
+    "kernelspec": {
+      "argv": [
+        "C:\\Users\\olatd\\AppData\\Local\\Programs\\Julia-1.9.4\\bin\\julia.exe",
+        "-i",
+        "--color=yes",
+        "--project=@.",
+        "C:\\Users\\olatd\\.julia\\packages\\IJulia\\Vo51o\\src\\kernel.jl",
+        "{connection_file}"
+      ],
+      "display_name": "Julia 1.9.4",
+      "env": {},
+      "interrupt_mode": "message",
+      "language": "julia",
+      "name": "julia-1.9"
+    },
+    "nteract": {
+      "version": "0.28.0"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
